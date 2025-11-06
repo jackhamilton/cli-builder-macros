@@ -18,6 +18,8 @@ This macro makes it really easy to make simple CLI programs. It handles keeping 
 ```rust
 cli_builder! {
     [
+        // Optional (sets what runs if no arguments are given, defaults to help):
+        // default = help,
         CLICommand {
             short_flag: "t",
             long_flag: "test",
