@@ -83,7 +83,7 @@ pub fn cli_builder_impl(input: TokenStream) -> TokenStream {
                             short_flag: "zsh",
                             long_flag: "completions",
                             command: completions,
-                            description: "prints zsh completions for sourcing, add to your shell via e.g. \"znap fpath _program_name 'program_name --completions'\" for znap"
+                            description: "prints zsh completions for compinit, add to your shell by using something like znap's fpath command"
                         },
                         #(#elems ,)*
                     ],
