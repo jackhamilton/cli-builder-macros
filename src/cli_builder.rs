@@ -52,7 +52,7 @@ pub fn cli_builder_impl(input: TokenStream) -> TokenStream {
     let expanded = quote! {
         #[derive(Clone)]
         pub struct CLICommand {
-            pub short_flag: char,
+            pub short_flag: &'static str,
             pub long_flag: &'static str,
             pub command: fn(),
             pub description: &'static str,
@@ -68,16 +68,22 @@ pub fn cli_builder_impl(input: TokenStream) -> TokenStream {
                 Self {
                     commands: ::std::vec![
                         CLICommand {
-                            short_flag: 'h',
+                            short_flag: "h",
                             long_flag: "help",
                             command: help,
-                            description: "Explains available commands."
+                            description: "prints help message (you are here)"
                         },
                         CLICommand {
-                            short_flag: 'v',
+                            short_flag: "v",
                             long_flag: "version",
                             command: version,
-                            description: "Outputs tool version."
+                            description: "prints tool version"
+                        },
+                        CLICommand {
+                            short_flag: "zsh",
+                            long_flag: "completions",
+                            command: completions,
+                            description: "prints zsh completions for sourcing, add to your shell via e.g. \"znap fpath _program_name 'program_name --completions'\" for znap"
                         },
                         #(#elems ,)*
                     ],
@@ -111,6 +117,24 @@ pub fn cli_builder_impl(input: TokenStream) -> TokenStream {
                 }
                 message
             }
+
+            pub fn gen_completions(&self) -> ::std::string::String {
+                let arg_block: &Vec<String> = &self.commands.clone().into_iter().map(|command| {
+                    let mut filtered_description = command.description.replace("\"", "");
+                    filtered_description = filtered_description.replace("\'", "");
+                    return format!("\t{{-{},--{}}}'[{}]'", command.short_flag, command.long_flag, filtered_description);
+                }).collect();
+                let args_block = arg_block.join("\n");
+                let name = env!("CARGO_PKG_NAME");
+                return format!("#compdef {name}
+local -a args
+args=(
+{args_block}
+)
+
+_arguments -s -S $args
+                ")
+            }
         }
 
         fn help() {
@@ -124,6 +148,11 @@ pub fn cli_builder_impl(input: TokenStream) -> TokenStream {
         fn version() {
             println!("{} version {} by Jack Hamilton", env!("CARGO_PKG_NAME"), env!("CARGO_PKG_VERSION"));
             std::process::exit(0);
+        }
+
+        fn completions() {
+            let runtime = Runtime::new();
+            println!("{}", runtime.gen_completions());
         }
 
         fn main() {

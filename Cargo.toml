@@ -1,13 +1,13 @@
 [package]
 name = "cli-builder-macros"
-version = "0.0.0"
+version = "0.1.0"
 edition = "2024"
 license = "Unlicense"
 authors = ["Jack Hamilton jackham800@gmail.com"]
-keywords = []
-categories = []
-repository = ""
-description = ""
+keywords = ["cli", "macro"]
+categories = ["command-line-interface"]
+repository = "https://github.com/jackhamilton/cli-builder-macros"
+description = "Macro to make cli creation easy. Also generates commands for help, version, and zsh completions."
 
 [lib]
 proc-macro = true
