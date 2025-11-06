@@ -26,6 +26,7 @@ cli_builder! {
             command: test_command,
             description: "Run a test"
         },
+        // Any number of additional commands
     ]
 }
 
