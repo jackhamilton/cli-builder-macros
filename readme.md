@@ -29,3 +29,5 @@ This macro makes it really easy to make simple CLI programs. It handles keeping 
     fn test_command() {
         println!("This is a test");
     }
+
+A main function will be generated for you, and routing to all cli commands handled from it. It expects static functions at the top level of the file - nothing with &self or &mut self. If you need a runtime object, it is suggested you create that either within the function context or as a static with a pointer.
