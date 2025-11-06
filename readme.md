@@ -15,19 +15,35 @@ This macro makes it really easy to make simple CLI programs. It handles keeping 
 
 # Usage:
 
-    cli_builder! {
-        [
-            CLICommand {
-                short_flag: "t",
-                long_flag: "test",
-                command: test_command,
-                description: "Run a test"
-            },
-        ]
-    }
+```rust
+cli_builder! {
+    [
+        CLICommand {
+            short_flag: "t",
+            long_flag: "test",
+            command: test_command,
+            description: "Run a test"
+        },
+    ]
+}
 
-    fn test_command() {
-        println!("This is a test");
-    }
+fn test_command() {
+    println!("This is a test");
+}
+```
+
+Output:
+
+```zsh
+> cargo run -- -h
+Help:
+         -h, --help: prints help message (you are here)
+         -v, --version: prints tool version
+         -zsh, --completions: prints zsh completions for sourcing, add to your shell via e.g. "znap fpath _program_name 'program_name --completions'" for znap
+         -t, --test: Run a test
+
+> cargo run -- -t
+This is a test
+```
 
 A main function will be generated for you, and routing to all cli commands handled from it. It expects static functions at the top level of the file - nothing with &self or &mut self. If you need a runtime object, it is suggested you create that either within the function context or as a static with a pointer.
