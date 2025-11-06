@@ -5,8 +5,8 @@ use syn::{
     parse_macro_input, ExprArray, Ident, Token,
 };
 
-/// cli_runtime!( [ Command { ... }, Command { ... } ] )
-/// cli_runtime!( default = help; [ Command { ... }, ... ] )
+/// cli_runtime!( [ CLICommand { ... }, CLICommand { ... } ] )
+/// cli_runtime!( default = help; [ CLICommand { ... }, ... ] )
 struct MacroInput {
     default_ident: Option<Ident>,
     array: ExprArray,
@@ -51,7 +51,7 @@ pub fn cli_builder_impl(input: TokenStream) -> TokenStream {
 
     let expanded = quote! {
         #[derive(Clone)]
-        pub struct Command {
+        pub struct CLICommand {
             pub short_flag: char,
             pub long_flag: &'static str,
             pub command: fn(),
@@ -59,7 +59,7 @@ pub fn cli_builder_impl(input: TokenStream) -> TokenStream {
         }
 
         pub struct Runtime {
-            pub commands: ::std::vec::Vec<Command>,
+            pub commands: ::std::vec::Vec<CLICommand>,
             pub default_command: ::std::option::Option<fn()>,
         }
 
@@ -67,13 +67,13 @@ pub fn cli_builder_impl(input: TokenStream) -> TokenStream {
             pub fn new() -> Self {
                 Self {
                     commands: ::std::vec![
-                        Command {
+                        CLICommand {
                             short_flag: 'h',
                             long_flag: "help",
                             command: help,
                             description: "Explains available commands."
                         },
-                        Command {
+                        CLICommand {
                             short_flag: 'v',
                             long_flag: "version",
                             command: version,
