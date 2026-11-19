@@ -96,3 +96,58 @@ Output:
 $ cargo run -- t --output output.txt
 You passed the following flags: --output output.txt
 ```
+
+# Real world example
+This demonstrates quick destructuring of input and output argumented flags using filter_map and find_map.
+
+```rust
+use cli_builder_macros::cli_builder;
+
+cli_builder! {
+	default = transcode;
+	commands = [
+		CLICommand {
+			short_keyword: Some("t"),
+			keyword: "transcode",
+			command: transcode,
+			description: "Transcode files or directories specified via input flags to the output directory.",
+		},
+	];
+	flags = [
+		CLIFlag {
+			short_flag: "i",
+			long_flag: "input",
+			description: "Provides an input to test. Can be a file or directory. Multiple are allowed.",
+			argument_name: Some("file_or_directory"),
+		},
+		CLIFlag {
+			short_flag: "o",
+			long_flag: "output",
+			description: "Specifies an output directory. Will be created if it doesn't exist.",
+			argument_name: Some("directory"),
+		},
+	];
+}
+
+fn transcode(runtime_flags: &Vec<CLIFlagType>) {
+	let output_dir = runtime_flags
+		.iter()
+		.find_map(|item| match item {
+			CLIFlagType::ArgumentedFlag(flag, arg) if flag.long_flag == "output" => Some(arg),
+			_ => None,
+		})
+		.expect("Error: You must provide an output directory.");
+
+	let input_dirs: Vec<&String> = runtime_flags
+		.iter()
+		.filter_map(|item| match item {
+			CLIFlagType::ArgumentedFlag(flag, arg) if flag.long_flag == "input" => Some(arg),
+			_ => None,
+		})
+		.collect();
+	assert!(
+		!input_dirs.is_empty(),
+		"Error: You must provide at least one input file or directory."
+	)
+}
+```
