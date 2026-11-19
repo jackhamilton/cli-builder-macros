@@ -151,7 +151,7 @@ impl Runtime {
                     flag.description
                 );
                 if let Some(argument) = flag.argument_name.as_ref() {
-                    helpmsg.push_str(&format!("\t\t- argument: {argument}\n"));
+                    helpmsg.push_str(&format!("\t\targument: {argument}\n"));
                 }
                 message.push_str(&helpmsg);
             }
