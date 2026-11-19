@@ -7,7 +7,7 @@ This macro makes it really easy to make simple CLI programs. It handles keeping 
 We generate a CLI with the following basic rules:
 - Runnable code, e.g. commands, are alphanumeric nouns with no flag syntax. ex: "ProgramName run"
 - Short flags have one dash, ex: "ProgramName -h"
-- Long flags have one dash, ex: "ProgramName --help"
+- Long flags have two dashes, ex: "ProgramName --help"
 - All programs have 'help, version, completions' generated for you as default commands.
     - As such, these are reserved as function names in your program because the macro generates them.
 
