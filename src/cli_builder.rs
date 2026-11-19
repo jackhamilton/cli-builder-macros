@@ -5,8 +5,8 @@ use syn::{
     parse_macro_input, ExprArray, Ident, Token,
 };
 
-/// cli_runtime!( [ CLICommand { ... }, CLICommand { ... } ] )
-/// cli_runtime!( default = help; [ CLICommand { ... }, ... ] )
+/// cli_runtime!( commands = [ CLICommand { ... }, CLICommand { ... } ], flags = [ CLIFlag { ... }, ... ] )
+/// cli_runtime!( default = help; commands = [ CLICommand { ... }, ... ], flags = [ CLIFlag { ... }, ... ] )
 struct MacroInput {
     default_ident: Option<Ident>,
     commands: ExprArray,
